@@ -20,9 +20,16 @@ func (r *Reader) Read() (Log, error) {
 	var l Log
 	var err error
 
-	l.Raw, err = r.br.ReadString('\n')
-	if err != nil {
-		return l, err
+	for {
+		l.Raw, err = r.br.ReadString('\n')
+		if err != nil {
+			return l, err
+		}
+	
+		// check for blank lines	
+		if len(l.Raw) > 1 {
+			break
+		}
 	}
 
 	scan(&l)

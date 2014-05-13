@@ -59,7 +59,6 @@ func (l Log) Request() (m, p, v string) {
 		fallthrough
 	case 1:
 		m = f[0]
-	case 0:
 	}
 
 	return

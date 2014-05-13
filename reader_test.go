@@ -1,6 +1,8 @@
 package clf
 
 import (
+	"io"
+	"strings"
 	"testing"
 )
 
@@ -39,5 +41,33 @@ func TestScan(t *testing.T) {
 				}
 			}
 		}
+	}
+}
+
+var testInput string = `127.0.0.1 - jdoe [25/Dec/2013:07:00:00 +0000] "GET / HTTP/1.1" 200 0
+127.0.0.1 - jdoe [25/Dec/2013:07:00:00 +0000] "GET /index.html HTTP/1.1" 200 0
+
+`
+
+
+func TestReader(t *testing.T) {
+	r := NewReader(strings.NewReader(testInput))
+
+	i := 0
+	for {
+		_, err := r.Read()
+		if err != nil {
+			if err != io.EOF {
+				t.Errorf("Unexpected read error: %s", err)
+			}
+
+			break
+		}
+
+		i++
+	}
+
+	if i != 2 {
+		t.Errorf("Unexpected number of logs parsed, expected 2 got %d", i)
 	}
 }
